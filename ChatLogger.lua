@@ -1,16 +1,16 @@
 local cloneref = cloneref or function(obj)
-    return obj
+	return obj
 end
 local function aUI(obj, size)
-    local UICorner = Instance.new("UICorner")
-    UICorner.Parent = obj
-    UICorner.CornerRadius = UDim.new(0, size)
+	local UICorner = Instance.new("UICorner")
+	UICorner.Parent = obj
+	UICorner.CornerRadius = UDim.new(0, size)
 end
 local ChatFrame = Instance.new("Frame")
 ChatFrame.Size = UDim2.new(0, 450, 0, 450)
 ChatFrame.Position = UDim2.new(0.5, -250, 0.5, -250)
 ChatFrame.Parent = game.CoreGui.RobloxGui
-ChatFrame.BackgroundTransparency = .05
+ChatFrame.BackgroundTransparency = 0.05
 ChatFrame.Name = "Chatemiz"
 aUI(ChatFrame, 6)
 ChatFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
@@ -37,7 +37,7 @@ ChatTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
 ChatTitle.Font = Enum.Font.SourceSansBold
 ChatTitle.TextSize = 16
 ChatTitle.RichText = true
-ChatTitle.Text = "Chatemiz  " .. "<font color=\"#B7B7B7\">" .. CountedChats .. "</font>"
+ChatTitle.Text = "Chatemiz  " .. '<font color="#B7B7B7">' .. CountedChats .. "</font>"
 ChatTitle.Parent = ChatDrag
 local ChatClose = Instance.new("TextButton")
 ChatClose.Size = UDim2.new(0, 15, 0, 15)
@@ -49,7 +49,7 @@ ChatClose.TextSize = 22
 ChatClose.Text = "X"
 ChatClose.Parent = ChatDrag
 ChatClose.MouseButton1Click:Connect(function()
-    ChatFrame:Destroy()
+	ChatFrame:Destroy()
 end)
 local HexNameColors = {
 	"#FF595E",
@@ -155,10 +155,10 @@ local HexNameColors = {
 }
 local PlayerNameColor = {}
 for i, v in pairs(cloneref(game:GetService("Players")):GetPlayers()) do
-    PlayerNameColor[v] = HexNameColors[math.random(1, #HexNameColors)]
+	PlayerNameColor[v] = HexNameColors[math.random(1, #HexNameColors)]
 end
 cloneref(game:GetService("Players")).PlayerAdded:Connect(function(plr)
-    PlayerNameColor[plr] = HexNameColors[math.random(1, #HexNameColors)]
+	PlayerNameColor[plr] = HexNameColors[math.random(1, #HexNameColors)]
 end)
 local SearchBar = Instance.new("TextBox")
 SearchBar.Size = UDim2.new(0, 100, 0, 15)
@@ -184,16 +184,24 @@ ChatMinimize.Text = "[-]"
 ChatMinimize.Parent = ChatDrag
 local TweenService = cloneref(game:GetService("TweenService"))
 ChatMinimize.MouseButton1Click:Connect(function()
-    if ChatFrame.Size == UDim2.new(0, 450, 0, 450) then
-        TweenService:Create(ChatFrame, TweenInfo.new(0.25, Enum.EasingStyle.Linear, Enum.EasingDirection.Out), { Size = UDim2.new(0, 450, 0, 25) }):Play()
+	if ChatFrame.Size == UDim2.new(0, 450, 0, 450) then
+		TweenService:Create(
+			ChatFrame,
+			TweenInfo.new(0.25, Enum.EasingStyle.Linear, Enum.EasingDirection.Out),
+			{ Size = UDim2.new(0, 450, 0, 25) }
+		):Play()
 		ChatMinimize.Text = "[+]"
-        task.wait(.25)
-        ChatDrag2.Visible = false
-    else
-        TweenService:Create(ChatFrame, TweenInfo.new(0.25, Enum.EasingStyle.Linear, Enum.EasingDirection.Out), { Size = UDim2.new(0, 450, 0, 450) }):Play()
+		task.wait(0.25)
+		ChatDrag2.Visible = false
+	else
+		TweenService:Create(
+			ChatFrame,
+			TweenInfo.new(0.25, Enum.EasingStyle.Linear, Enum.EasingDirection.Out),
+			{ Size = UDim2.new(0, 450, 0, 450) }
+		):Play()
 		ChatMinimize.Text = "[-]"
 		ChatDrag2.Visible = true
-    end
+	end
 end)
 local ChatLog = Instance.new("ScrollingFrame")
 ChatLog.Size = UDim2.new(1, 0, 1, -25)
@@ -219,6 +227,40 @@ local function UpdateSearchCounter()
 		ChatTitle.Text = "Chatemiz  " .. '<font color="#B7B7B7">' .. visibleCount .. "</font>"
 	end
 end
+local Chats = {}
+local FileButton = Instance.new("TextButton")
+FileButton.Size = UDim2.new(0, 22, 0, 15)
+FileButton.Position = UDim2.new(1, -135, 0, 5)
+FileButton.BackgroundTransparency = 1
+FileButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+FileButton.Font = Enum.Font.SourceSansBold
+FileButton.TextSize = 22
+FileButton.Text = "File"
+FileButton.Parent = ChatDrag
+FileButton.MouseButton1Click:Connect(function()
+	local ChatInString = table.concat(Chats, "\n")
+	if not isfolder("Tremiz") then
+		makefolder("Tremiz")
+	end
+	if not isfolder("Tremiz/Chats") then
+		makefolder("Tremiz/Chats")
+	end
+	local marketplaceService = cloneref(game:GetService("MarketplaceService"))
+	local success, info = pcall(function()
+		return marketplaceService:GetProductInfo(game.PlaceId)
+	end)
+	if success and info then
+		writefile(
+			"Tremiz/Chats/Saved_Chat_in " .. info.Name:gsub("[%c%p%s]", "_") .. "_" .. os.date("%Y-%m-%d_%H-%M-%S") .. ".txt",
+			ChatInString
+		)
+		return
+	end
+	writefile(
+		"Tremiz/Chats/Saved_Chat_in_" .. game.PlaceId .. "_" .. os.date("%Y-%m-%d_%H-%M-%S") .. ".txt",
+		ChatInString
+	)
+end)
 local ChatClear = Instance.new("TextButton")
 ChatClear.Size = UDim2.new(0, 15, 0, 15)
 ChatClear.Position = UDim2.new(1, -75, 0, 5)
@@ -229,11 +271,11 @@ ChatClear.TextSize = 22
 ChatClear.Text = "C"
 ChatClear.Parent = ChatDrag
 ChatClear.MouseButton1Click:Connect(function()
-    for i, v in pairs(ChatLog:GetChildren()) do
-        if v.Name == "Log" then
-            v:Destroy()
-        end
-    end
+	for i, v in pairs(ChatLog:GetChildren()) do
+		if v.Name == "Log" then
+			v:Destroy()
+		end
+	end
 	CountedChats = 0
 	UpdateSearchCounter()
 end)
@@ -248,7 +290,7 @@ LogsJoinsOrLeaves.TextSize = 22
 LogsJoinsOrLeaves.Text = "J/L"
 LogsJoinsOrLeaves.Parent = ChatDrag
 LogsJoinsOrLeaves.MouseButton1Click:Connect(function()
-    LogJoinsOrLeaves = not LogJoinsOrLeaves
+	LogJoinsOrLeaves = not LogJoinsOrLeaves
 end)
 local UIListLayout = Instance.new("UIListLayout")
 UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
@@ -260,7 +302,6 @@ Padding.PaddingRight = UDim.new(0, 2)
 Padding.PaddingTop = UDim.new(0, 2)
 Padding.PaddingBottom = UDim.new(0, 2)
 Padding.Parent = ChatLog
-
 function AddLog(Text, Player, Time, DidJoin, DidLeave)
 	local localPlayer = cloneref(game:GetService("Players")).LocalPlayer
 	local playerName = typeof(Player) == "string" and Player or Player.Name
@@ -282,7 +323,7 @@ function AddLog(Text, Player, Time, DidJoin, DidLeave)
 	TextHolder.TextSize = 16
 	TextHolder.RichText = true
 	TextHolder.TextWrapped = true
-if DidJoin and LogJoinsOrLeaves then
+	if DidJoin and LogJoinsOrLeaves then
 		local NameColor = PlayerNameColor[playerObj] or "#FFFFFF"
 		TextHolder.Text = '<font color="#A0A6A2">'
 			.. "</font><font color='"
@@ -293,7 +334,7 @@ if DidJoin and LogJoinsOrLeaves then
 			.. Time
 			.. "</font>"
 		TextHolder.TextColor3 = Color3.fromRGB(0, 255, 0)
-elseif DidLeave and LogJoinsOrLeaves then
+	elseif DidLeave and LogJoinsOrLeaves then
 		local NameColor = PlayerNameColor[playerObj] or "#FFFFFF"
 		TextHolder.Text = '<font color="#A0A6A2">'
 			.. "</font><font color='"
@@ -321,7 +362,7 @@ elseif DidLeave and LogJoinsOrLeaves then
 			.. ' <font color="#FFFFFF"> '
 			.. "</font>"
 	end
-
+	table.insert(Chats, (string.gsub(TextHolder.Text, "<[^>]->", "")))
 	local Padding = Instance.new("UIPadding")
 	Padding.PaddingLeft = UDim.new(0, 10)
 	Padding.PaddingRight = UDim.new(0, 10)
@@ -343,13 +384,26 @@ elseif DidLeave and LogJoinsOrLeaves then
 	end)
 end
 local Players = cloneref(game:GetService("Players"))
+for _, plr in pairs(Players:GetPlayers()) do
+	plr.Chatted:Connect(function(msg)
+		AddLog(msg, plr, os.date("%H:%M:%S"))
+		CountedChats = CountedChats + 1
+		UpdateSearchCounter()
+	end)
+end
+
 Players.PlayerAdded:Connect(function(plr)
-	if not LogJoinsOrLeaves then
-		return
+	if LogJoinsOrLeaves then
+		AddLog("Player joined", plr, os.date("%H:%M:%S"), true, false)
+		CountedChats = CountedChats + 1
+		UpdateSearchCounter()
 	end
-	AddLog("Player joined", plr, os.date("%H:%M:%S"), true, false)
-	CountedChats = CountedChats + 1
-	UpdateSearchCounter()
+
+	plr.Chatted:Connect(function(msg)
+		AddLog(msg, plr, os.date("%H:%M:%S"))
+		CountedChats = CountedChats + 1
+		UpdateSearchCounter()
+	end)
 end)
 
 Players.PlayerRemoving:Connect(function(plr)
@@ -360,13 +414,6 @@ Players.PlayerRemoving:Connect(function(plr)
 	CountedChats = CountedChats + 1
 	UpdateSearchCounter()
 end)
-for _, plr in pairs(Players:GetPlayers()) do
-    plr.Chatted:Connect(function(msg)
-        AddLog(msg, plr, os.date("%H:%M:%S"))
-        CountedChats = CountedChats + 1
-		UpdateSearchCounter()
-    end)
-end
 local dragging = false
 local dragStart
 local startPos
